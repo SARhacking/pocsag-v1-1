@@ -1,13 +1,14 @@
 # POCSAG Paging Application
 
-A Linux application for encoding and transmitting POCSAG pager messages through VHF amateur radio repeaters.
+A web-based application for encoding and transmitting POCSAG pager messages through VHF amateur radio repeaters.
 
 ## Features
 
+- **Web Interface**: User-friendly web interface for message encoding
 - **POCSAG Encoding**: Full implementation of POCSAG protocol with BCH error correction
 - **FSK Modulation**: Generates audio signals for radio transmission
 - **CTCSS Support**: Adds CTCSS tones for repeater access
-- **Audio Output**: Direct transmission through sound card to radio
+- **Audio Output**: Direct transmission through sound card to radio or WAV file generation
 - **Testing Tools**: Built-in encoder/decoder testing
 
 ## Installation
@@ -15,7 +16,9 @@ A Linux application for encoding and transmitting POCSAG pager messages through 
 1. Install system dependencies:
 ```bash
 sudo apt update
-sudo apt install python3 python3-pip python3-pyaudio
+sudo apt install python3 python3-pip
+# Optional: for audio transmission
+sudo apt install python3-pyaudio
 ```
 
 2. Install Python dependencies:
@@ -25,29 +28,28 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Basic Transmission
+### Web Interface
 
+Start the web server:
+```bash
+python app.py
+```
+
+Open your browser to `http://localhost:5000` and use the web form to:
+- Enter pager RIC and message
+- Configure transmission parameters
+- Generate WAV files for download
+- Transmit audio directly (requires PyAudio)
+- Test encoding/decoding
+
+### Command Line (Legacy)
+
+The original command-line interface is still available:
 ```bash
 python main.py -a 123456 -m "Hello World"
 ```
 
-### Advanced Options
-
-```bash
-# List audio devices
-python main.py --list-devices
-
-# Transmit with CTCSS tone for repeater
-python main.py -a 123456 -m "Test message" -c 67.0
-
-# Save to WAV file instead of transmitting
-python main.py -a 123456 -m "Test" --save-wav test.wav
-
-# Test encoding/decoding
-python main.py -a 123456 -m "Test" --test
-```
-
-### Command Line Options
+See below for full command-line options.
 
 - `-a, --address`: Pager RIC (default: 123456)
 - `-m, --message`: Message to send (required)
@@ -107,8 +109,10 @@ multimon-ng -t raw -a POCSAG1200 -
 ## Architecture
 
 - `pocsag.py`: Core POCSAG encoder, decoder, and modulator classes
-- `main.py`: Command-line interface and audio transmission
+- `app.py`: Web interface using Flask
+- `main.py`: Legacy command-line interface and audio transmission
 - `requirements.txt`: Python dependencies
+- `templates/`: HTML templates for the web interface
 
 ## Protocol Details
 
